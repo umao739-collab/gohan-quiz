@@ -1,0 +1,481 @@
+<title>みそしるを作ろう！クイズ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* ごはんクイズと同じレイアウト。色だけ、みその色（あたたかい茶・だいだい）に。 */
+:root{
+  --font:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;
+  --bg:#FBE9D3; --card:#FFFDF8; --ink:#4A2F25; --ink2:#7D6253; --line:#EBCFB0;
+  --coral:#D2593F; --coral-d:#A8412C; --sun:#F2A54E; --leaf:#3FA66B; --leaf-bg:#DDF2DD;
+  --sky:#E39A4C; --blush:#FFD3CC; --oops:#C8452F; --oops-bg:#FFE3DB;
+  --on-sun:#3E2518; --on-coral:#FFFFFF; --on-leaf:#10361F;
+  --illu:#FFE3C2; --illu-in:#FFF4E2; --glass-line:#9A7B66;
+  --water:#CFE6EF; --broth:#E9C98F; --miso:#C98A4B; --daikon:#FFFFFF; --daikon-l:#C9BFB0; --aburage:#E5A94E; --negi:#6DBE5E; --negiw:#EAF5D5;
+  --fish:#8EA2B4; --fish-d:#5E7183; --hole:#6B5547; --bowl:#FFF6E6;
+  --flame1:#FF8A3D; --flame2:#FFD34D; --steam-c:#C9B5A4; --pot:#B9B4B0; --pot-l:#DAD6D2; --stove:#8D7F78; --wood:#C99560; --bubble:rgba(255,255,255,.75);
+  --tape:rgba(242,165,78,.78);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#2A1F1A; --card:#3A2C25; --ink:#FBEFE4; --ink2:#D3BDAE; --line:#5A4438;
+    --coral:#FF9A7E; --coral-d:#D6735A; --sun:#F6B964; --leaf:#6BD08F; --leaf-bg:#25472F;
+    --sky:#F0AD62; --blush:#4B3441; --oops:#FF9C8A; --oops-bg:#55302B;
+    --on-sun:#3E2518; --on-coral:#3A1F18; --on-leaf:#10361F;
+    --illu:#4A372D; --illu-in:#5A453A; --glass-line:#BFA38F;
+    --water:#4F7E9A; --broth:#B98E55; --miso:#A9692F; --daikon:#F3EEE6; --daikon-l:#B7AA98; --aburage:#C98B35; --negi:#7FD06E; --negiw:#9DBB82;
+    --fish:#8EA2B4; --fish-d:#6E8296; --hole:#3B2B22; --bowl:#EADCC9;
+    --steam-c:#E9D9CB; --pot:#8F8B88; --pot-l:#B3AEAA; --stove:#6F625B; --wood:#B98550; --bubble:rgba(255,255,255,.35);
+    --tape:rgba(246,185,100,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#2A1F1A; --card:#3A2C25; --ink:#FBEFE4; --ink2:#D3BDAE; --line:#5A4438;
+  --coral:#FF9A7E; --coral-d:#D6735A; --sun:#F6B964; --leaf:#6BD08F; --leaf-bg:#25472F;
+  --sky:#F0AD62; --blush:#4B3441; --oops:#FF9C8A; --oops-bg:#55302B;
+  --on-sun:#3E2518; --on-coral:#3A1F18; --on-leaf:#10361F;
+  --illu:#4A372D; --illu-in:#5A453A; --glass-line:#BFA38F;
+  --water:#4F7E9A; --broth:#B98E55; --miso:#A9692F; --daikon:#F3EEE6; --daikon-l:#B7AA98; --aburage:#C98B35; --negi:#7FD06E; --negiw:#9DBB82;
+  --fish:#8EA2B4; --fish-d:#6E8296; --hole:#3B2B22; --bowl:#EADCC9;
+  --steam-c:#E9D9CB; --pot:#8F8B88; --pot-l:#B3AEAA; --stove:#6F625B; --wood:#B98550; --bubble:rgba(255,255,255,.35);
+  --tape:rgba(246,185,100,.6);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--font); font-weight:500; line-height:1.7;
+  padding-block:18px 36px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.app{max-width:1060px;margin:0 auto}
+button{font-family:inherit}
+ruby rt{font-size:.5em;font-weight:700}
+
+/* header */
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font-size:clamp(24px,4.2vw,34px);line-height:1.2;font-weight:900;letter-spacing:.02em}
+.top .sub{margin:2px 0 0;color:var(--ink2);font-size:14px;font-weight:700}
+.pre{margin-left:auto;font-size:12px;font-weight:900;color:var(--on-sun);background:var(--sun);border-radius:999px;padding:3px 12px}
+
+/* progress (8 steps) */
+.track{display:flex;align-items:center;list-style:none;margin:18px 0 0;padding:0}
+.track li{flex:1;display:flex;align-items:center;min-width:0}
+.track li:last-child{flex:none}
+.dot{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900;color:var(--ink2);background:var(--card);border:3px solid var(--line);transition:transform .2s}
+.bar{flex:1;height:5px;border-radius:3px;background:var(--line);margin:0 4px;min-width:3px}
+.bar.done{background:var(--leaf)}
+.track .done .dot{background:var(--leaf);border-color:var(--leaf);color:var(--on-leaf)}
+.track .now .dot{background:var(--sun);border-color:var(--sun);color:var(--on-sun);transform:scale(1.2)}
+.dot svg{width:16px;height:16px}
+@media (max-width:520px){
+  .dot{width:23px;height:23px;font-size:11px;border-width:2px}
+  .dot svg{width:13px;height:13px}
+  .bar{margin:0 2px}
+}
+
+/* stage */
+.stage{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:start;margin-top:22px}
+@media (max-width:780px){.stage{grid-template-columns:minmax(0,1fr);gap:18px}}
+.pic{background:var(--illu);border-radius:32px;padding:22px 20px 14px}
+.pic svg{display:block;width:100%;height:auto;max-width:100%}
+.ph{margin:10px 6px 0;font-size:12px;font-weight:700;color:var(--ink2)}
+
+/* polaroid (写真 or 仮のイラスト) */
+.polaroid{position:relative;margin:0;background:var(--card);padding:10px 10px 0;border-radius:12px;box-shadow:0 6px 0 var(--line);transform:rotate(-1.1deg);max-width:100%}
+.polaroid::before{content:"";position:absolute;left:50%;top:-12px;width:92px;height:24px;transform:translateX(-50%) rotate(2deg);background:var(--tape);border-radius:3px;opacity:.95;z-index:1}
+.shot{display:block;width:100%;height:auto;max-width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px;background:var(--line)}
+.illbox{width:100%;aspect-ratio:16/9;border-radius:6px;background:var(--illu-in);overflow:hidden}
+.illbox svg{width:100%;height:100%}
+.cap{min-height:56px;display:flex;align-items:center;justify-content:center;padding:6px 8px 8px;font-size:18px;font-weight:900;text-align:center;line-height:1.4}
+.cap.empty{color:var(--ink2);font-size:14px;font-weight:700}
+.cap.pop{animation:pop .35s}
+.qmeta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stagechip{background:var(--sun);color:var(--on-sun);font-weight:900;border-radius:999px;padding:3px 14px;font-size:14px}
+.qno{font-size:14px;font-weight:900;color:var(--ink2)}
+h2.q{margin:10px 0 6px;font-size:clamp(20px,2.7vw,26px);line-height:1.55;font-weight:900;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere;outline:none}
+.choices{display:grid;gap:12px;margin-top:14px}
+.choice{display:flex;align-items:center;gap:14px;width:100%;text-align:left;min-height:62px;padding:12px 16px;
+  font-size:18px;font-weight:700;line-height:1.5;color:var(--ink);background:var(--card);
+  border:3px solid var(--line);border-radius:22px;box-shadow:0 4px 0 var(--line);cursor:pointer;
+  transition:transform .12s,border-color .12s,background .12s,box-shadow .12s}
+.choice:hover:not([disabled]){border-color:var(--sky)}
+.choice:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.choice[disabled]{cursor:default}
+.badge{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--on-sun);font-weight:900;font-size:16px}
+.ctext{min-width:0;word-break:keep-all;overflow-wrap:anywhere}
+.mark{margin-left:auto;flex:none;width:30px;height:30px;display:none}
+.choice.good{background:var(--leaf-bg);border-color:var(--leaf);box-shadow:0 4px 0 var(--leaf)}
+.choice.bad{background:var(--oops-bg);border-color:var(--oops);box-shadow:none;animation:shake .4s}
+.choice.good .mark,.choice.bad .mark{display:block}
+.choice.good .mark{color:var(--leaf)} .choice.bad .mark{color:var(--oops)}
+
+/* feedback */
+.fb{display:flex;gap:12px;align-items:flex-start;margin-top:18px;animation:pop .3s}
+.fb>svg{flex:none;width:68px;height:auto}
+.say{position:relative;flex:1;min-width:0;padding:12px 16px;border-radius:22px;border:3px solid var(--line);background:var(--card);font-weight:700;line-height:1.65}
+.say::before{content:"";position:absolute;left:-10px;top:24px;width:15px;height:15px;transform:rotate(45deg);background:var(--card);border-left:3px solid var(--line);border-bottom:3px solid var(--line)}
+.say strong{display:block;font-size:19px;font-weight:900}
+.fb.ok .say{background:var(--leaf-bg);border-color:var(--leaf)}
+.fb.ok .say::before{background:var(--leaf-bg);border-color:var(--leaf)}
+.fb.no .say{background:var(--oops-bg);border-color:var(--oops)}
+.fb.no .say::before{background:var(--oops-bg);border-color:var(--oops)}
+.next{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:12px 28px;font-size:19px;font-weight:900;color:var(--on-coral);background:var(--coral);border:0;border-radius:999px;box-shadow:0 5px 0 var(--coral-d);cursor:pointer;transition:transform .12s,box-shadow .12s}
+.next:active{transform:translateY(4px);box-shadow:0 1px 0 var(--coral-d)}
+.next svg{width:20px;height:20px}
+:focus-visible{outline:4px solid var(--sky);outline-offset:3px;border-radius:12px}
+
+/* result */
+.hero{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:22px}
+.hero>svg{width:120px;height:auto}
+.hero h2{margin:6px 0 0;font-size:26px;font-weight:900;line-height:1.4}
+.hero p{margin:0;font-weight:700;color:var(--ink2)}
+.stars{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px}
+.stars svg{width:24px;height:24px}
+.stars .off{opacity:.28}
+.sheet{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:16px 18px 10px}
+.sheet h3{margin:0 0 4px;font-size:20px;font-weight:900}
+.sheet .note{margin:0 0 10px;font-size:13px;color:var(--ink2);font-weight:700}
+.row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:2px dashed var(--line)}
+.row .ri{width:40px;height:40px}
+.row .ri svg{width:100%;height:100%;display:block}
+.row b{font-size:17px;font-weight:900}
+.row .rt{font-size:13px;color:var(--ink2);font-weight:700;margin-left:8px}
+.row .cue{display:block;font-size:15px;line-height:1.55;font-weight:700}
+.tag{font-size:12px;font-weight:900;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.tag.on{background:var(--leaf-bg);color:var(--ink);border:2px solid var(--leaf)}
+.tag.off{background:var(--illu);color:var(--ink2);border:2px dashed var(--line)}
+@media (max-width:520px){.row{grid-template-columns:40px minmax(0,1fr)}.row .tag{grid-column:2;justify-self:start}}
+.again{margin-top:10px;padding:10px 22px;font-size:16px;font-weight:900;color:var(--ink);background:var(--card);border:3px solid var(--line);border-radius:999px;box-shadow:0 4px 0 var(--line);cursor:pointer}
+.foot{margin:26px 0 0;font-size:12px;color:var(--ink2);font-weight:700}
+
+/* svg parts (theme-aware through tokens) */
+.s-shadow{fill:var(--ink);opacity:.08}
+.s-pot{fill:var(--pot)} .s-potl{fill:var(--pot-l);stroke:var(--glass-line);stroke-width:2}
+.s-water{fill:var(--water)} .s-broth{fill:var(--broth)} .s-miso{fill:var(--miso)}
+.s-stove{fill:var(--stove)} .s-stove2{fill:var(--stove);opacity:.8}
+.s-flame1{fill:var(--flame1)} .s-flame2{fill:var(--flame2)}
+.s-steam{fill:none;stroke:var(--steam-c);stroke-width:6;stroke-linecap:round}
+.s-bubble{fill:var(--bubble);stroke:var(--glass-line);stroke-width:1.4}
+.s-daikon{fill:var(--daikon);stroke:var(--daikon-l);stroke-width:2;stroke-linejoin:round}
+.s-aburage{fill:var(--aburage);stroke:var(--miso);stroke-width:2;stroke-linejoin:round}
+.s-negi{fill:var(--negiw);stroke:var(--negi);stroke-width:2.6}
+.s-fish{fill:var(--fish);stroke:var(--fish-d);stroke-width:2;stroke-linejoin:round}
+.s-fishd{fill:var(--fish-d)} .s-hole{fill:var(--hole)}
+.s-dash{fill:none;stroke:var(--coral);stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round}
+.s-plate{fill:var(--bowl);stroke:var(--line);stroke-width:3}
+.s-bowl{fill:var(--bowl);stroke:var(--glass-line);stroke-width:3;stroke-linejoin:round}
+.s-wood{fill:var(--wood)} .s-woodl{fill:none;stroke:var(--wood);stroke-width:8;stroke-linecap:round}
+.s-drop{fill:none;stroke:var(--water);stroke-width:5;stroke-linecap:round}
+.s-swirl{fill:none;stroke:var(--glass-line);stroke-width:3;stroke-linecap:round;opacity:.7}
+.s-sticker{fill:var(--sun)} .s-stxt{font-family:var(--font);font-size:15px;font-weight:900;fill:var(--on-sun);text-anchor:middle}
+.s-q{font-family:var(--font);font-size:44px;font-weight:900;fill:var(--coral);text-anchor:middle}
+.s-arrow{fill:none;stroke:var(--ink2);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.s-outline{stroke:var(--glass-line);stroke-width:2.4;stroke-linejoin:round}
+.s-leaf{fill:var(--leaf)}
+
+/* motion */
+.steam{animation:rise 2.8s ease-in-out infinite}
+.flick{transform-box:fill-box;transform-origin:50% 100%;animation:flick .8s ease-in-out infinite alternate}
+@keyframes rise{0%{opacity:0;transform:translateY(8px)}35%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+@keyframes flick{from{transform:scaleY(1)}to{transform:scaleY(.84) scaleX(1.06)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}}
+.fb.ok>svg{animation:hop .6s ease-out}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="app" id="app"></div>
+
+<script>
+/* ---------- helpers ---------- */
+var $=function(s){return document.querySelector(s)};
+var rubyfy=function(t){return t.replace(/\{([^|}]+)\|([^}]+)\}/g,'<ruby>$1<rt>$2</rt></ruby>')};
+function sticker(x,y,w,t){
+  return '<g><rect x="'+x+'" y="'+y+'" width="'+w+'" height="30" rx="15" class="s-sticker"/><text x="'+(x+w/2)+'" y="'+(y+21)+'" class="s-stxt">'+t+'</text></g>';
+}
+function svg(body){return '<svg viewBox="-18 0 356 200" aria-hidden="true">'+body+'</svg>'}
+
+var CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var CROSS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>';
+var ARROW='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2 6.3 20.3l1.2-6.4L2.8 9.5l6.4-.8z" fill="var(--sun)" stroke="#C97F2A" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+
+/* ---------- mascot: おわんちゃん ---------- */
+function mascot(mood,w){
+  var eyes,mouth;
+  if(mood==='cheer'){
+    eyes='<path d="M29 47q6-9 12 0M51 47q6-9 12 0" fill="none" stroke="#4A2F25" stroke-width="3.2" stroke-linecap="round"/>';
+    mouth='<path d="M38 55q8 14 16 0z" fill="#D2593F" stroke="#4A2F25" stroke-width="2.4" stroke-linejoin="round"/>';
+  }else if(mood==='oops'){
+    eyes='<circle cx="35" cy="47" r="3.8" fill="#4A2F25"/><circle cx="57" cy="47" r="3.8" fill="#4A2F25"/><path d="M28 38q7-5 13-1M64 38q-7-5-13-1" fill="none" stroke="#4A2F25" stroke-width="2.6" stroke-linecap="round"/>';
+    mouth='<path d="M39 60q3-4 7 0t7 0" fill="none" stroke="#4A2F25" stroke-width="2.6" stroke-linecap="round"/>';
+  }else{
+    eyes='<circle cx="35" cy="47" r="3.8" fill="#4A2F25"/><circle cx="57" cy="47" r="3.8" fill="#4A2F25"/>';
+    mouth='<path d="M40 56q6 7 12 0" fill="none" stroke="#4A2F25" stroke-width="2.8" stroke-linecap="round"/>';
+  }
+  var arms=mood==='cheer'?'<path d="M10 70q-9-6-7-18M82 70q9-6 7-18" fill="none" stroke="#E2C7A6" stroke-width="5" stroke-linecap="round"/>':'';
+  return '<svg viewBox="0 0 92 108" width="'+w+'" aria-hidden="true">'+arms+
+    '<path d="M36 22q-6-6 0-12t0-8M56 22q-6-6 0-12t0-8" fill="none" stroke="#C9B5A4" stroke-width="3.4" stroke-linecap="round"/>'+
+    '<path d="M8 44H84Q84 92 46 101Q8 92 8 44Z" fill="#FFF6E6" stroke="#E2C7A6" stroke-width="3.5" stroke-linejoin="round"/>'+
+    '<ellipse cx="46" cy="44" rx="38" ry="9" fill="#E9A860" stroke="#E2C7A6" stroke-width="3"/>'+
+    '<ellipse cx="30" cy="43" rx="5" ry="2.6" fill="#FFF" stroke="#6DBE5E" stroke-width="1.6"/><ellipse cx="60" cy="45" rx="5" ry="2.6" fill="#FFF" stroke="#6DBE5E" stroke-width="1.6"/><ellipse cx="46" cy="42" rx="4" ry="2.2" fill="#E5C06A"/>'+
+    '<g transform="translate(0,17)">'+eyes+'<ellipse cx="24" cy="57" rx="7" ry="4.6" fill="#FFB8B0"/><ellipse cx="68" cy="57" rx="7" ry="4.6" fill="#FFB8B0"/>'+mouth+'</g></svg>';
+}
+
+/* ---------- 仮のイラスト（写真に差しかえるまで） ---------- */
+function flames(level){
+  var H={strong:30,mid:20,weak:11}[level];
+  if(!H)return '';
+  var o='';
+  [112,136,160,184,208].forEach(function(x,k){
+    var h=H*(k%2?.8:1),y=162,d=(k*.15).toFixed(2);
+    o+='<path class="s-flame1 flick" style="animation-delay:'+d+'s" d="M'+(x-8)+' '+y+' C'+(x-8)+' '+(y-h*.6)+' '+(x-1)+' '+(y-h*.7)+' '+x+' '+(y-h)+' C'+(x+1)+' '+(y-h*.7)+' '+(x+8)+' '+(y-h*.6)+' '+(x+8)+' '+y+' Z"/>';
+    o+='<path class="s-flame2 flick" style="animation-delay:'+d+'s" d="M'+(x-4)+' '+y+' C'+(x-4)+' '+(y-h*.3)+' '+(x-1)+' '+(y-h*.4)+' '+x+' '+(y-h*.55)+' C'+(x+1)+' '+(y-h*.4)+' '+(x+4)+' '+(y-h*.3)+' '+(x+4)+' '+y+' Z"/>';
+  });
+  return o;
+}
+/* なべ（アルミ）：fill=water|broth|miso, inner=なべの中の具 */
+function pot(o){
+  o=o||{};
+  var out='<ellipse cx="160" cy="188" rx="124" ry="6" class="s-shadow"/>';
+  out+='<rect x="92" y="162" width="136" height="12" rx="6" class="s-stove"/><rect x="70" y="173" width="180" height="14" rx="7" class="s-stove2"/>';
+  out+=flames(o.flame);
+  out+='<rect x="42" y="64" width="24" height="10" rx="5" class="s-pot"/><rect x="254" y="64" width="24" height="10" rx="5" class="s-pot"/>';
+  out+='<path d="M62 70V114Q62 128 78 128H242Q258 128 258 114V70Z" class="s-pot"/>';
+  out+='<ellipse cx="160" cy="70" rx="98" ry="24" class="s-potl"/>';
+  out+='<ellipse cx="160" cy="70" rx="86" ry="19" class="s-'+(o.fill||'water')+'"/>';
+  out+=(o.inner||'');
+  for(var k=0;k<(o.steam||0);k++){var x=116+k*44;out+='<path class="s-steam steam" style="animation-delay:'+(k*.5)+'s" d="M'+x+' 40 q-8 -8 0 -16 q8 -8 0 -16"/>'}
+  return out+(o.extra||'');
+}
+function daikonBits(n){
+  var P=[[118,66],[146,72],[176,64],[204,72],[132,60],[190,76],[160,62],[104,72]],o='';
+  for(var i=0;i<n;i++)o+='<ellipse cx="'+P[i][0]+'" cy="'+P[i][1]+'" rx="10" ry="5.4" class="s-daikon" transform="rotate('+(i*37%50-25)+' '+P[i][0]+' '+P[i][1]+')"/>';
+  return o;
+}
+function ageBits(n){
+  var P=[[128,74],[170,68],[196,76],[150,62],[112,66]],o='';
+  for(var i=0;i<n;i++)o+='<rect x="'+(P[i][0]-9)+'" y="'+(P[i][1]-3.5)+'" width="18" height="7" rx="2" class="s-aburage" transform="rotate('+(i*29%40-20)+' '+P[i][0]+' '+P[i][1]+')"/>';
+  return o;
+}
+function negiBits(n){
+  var P=[[140,68],[182,72],[122,74],[200,64],[160,76],[164,62]],o='';
+  for(var i=0;i<n;i++)o+='<ellipse cx="'+P[i][0]+'" cy="'+P[i][1]+'" rx="6" ry="3.2" class="s-negi"/>';
+  return o;
+}
+function quarter(x,y,r,rot){
+  return '<path d="M'+x+' '+y+' L'+(x+r)+' '+y+' A'+r+' '+r+' 0 0 1 '+x+' '+(y+r)+'Z" class="s-daikon" transform="rotate('+rot+' '+x+' '+y+')"/>';
+}
+var ILLU={
+  niboshi:function(){return svg(
+    '<ellipse cx="160" cy="112" rx="132" ry="74" class="s-plate"/>'+
+    '<g transform="translate(160 105) rotate(-12)">'+
+      '<path d="M85 0L114 -20L107 0L114 20Z" class="s-fish"/>'+
+      '<path d="M-90 0Q-60 -24 0 -22Q60 -18 85 0Q60 18 0 22Q-60 24 -90 0Z" class="s-fish"/>'+
+      '<ellipse cx="-72" cy="0" rx="22" ry="19" class="s-fishd"/><circle cx="-80" cy="-5" r="3.4" fill="#fff"/>'+
+      '<ellipse cx="-20" cy="4" rx="18" ry="8" class="s-hole"/>'+
+    '</g>'+
+    '<circle cx="90" cy="120" r="30" class="s-dash"/><ellipse cx="141" cy="113" rx="26" ry="15" class="s-dash"/>'+
+    '<path d="M62 56L82 92M214 52L150 98" class="s-swirl"/>'+
+    sticker(22,28,64,'あたま')+sticker(168,22,92,'はらわた')
+  )},
+  daikon:function(){return svg(
+    '<ellipse cx="160" cy="184" rx="130" ry="7" class="s-shadow"/>'+
+    '<rect x="22" y="70" width="82" height="48" rx="10" class="s-daikon"/><ellipse cx="104" cy="94" rx="10" ry="24" class="s-daikon"/>'+
+    '<path d="M122 94h30M142 82l12 12-12 12" class="s-arrow"/>'+
+    quarter(176,50,34,0)+quarter(228,56,34,20)+quarter(180,108,34,-10)+quarter(232,114,34,10)+
+    '<path d="M268 48v34M262 48h12M262 82h12" class="s-arrow" style="stroke-width:3"/>'+
+    sticker(208,152,100,'厚さ 5mm')
+  )},
+  aburage:function(){return svg(
+    '<ellipse cx="160" cy="184" rx="130" ry="7" class="s-shadow"/>'+
+    '<rect x="60" y="92" width="150" height="76" rx="16" class="s-aburage"/>'+
+    '<path d="M86 108h98M86 128h98M86 148h60" class="s-swirl"/>'+
+    '<path d="M92 22v44M120 14v52M148 22v44M176 14v52" class="s-drop"/>'+
+    '<path d="M236 160q-8-10 0-20t0-20M262 160q-8-10 0-20t0-20" class="s-steam" style="stroke-width:5"/>'
+  )},
+  dashi:function(){return svg(pot({fill:'broth',flame:'strong',steam:2,bubbles:1,
+    inner:'<ellipse cx="130" cy="68" rx="16" ry="4.2" class="s-fish" transform="rotate(-14 130 68)"/><ellipse cx="184" cy="74" rx="15" ry="4" class="s-fish" transform="rotate(12 184 74)"/><circle cx="106" cy="76" r="3.4" class="s-bubble"/><circle cx="214" cy="68" r="4" class="s-bubble"/><circle cx="160" cy="80" r="3" class="s-bubble"/>'})+sticker(112,2,96,'4〜5分'))},
+  daikon2:function(){return svg(pot({fill:'broth',flame:'mid',steam:2,inner:daikonBits(7)}))},
+  age:function(){return svg(pot({fill:'broth',flame:'mid',steam:2,inner:daikonBits(5)+ageBits(3)}))},
+  negi:function(){return svg(pot({fill:'broth',flame:'mid',steam:2,inner:daikonBits(4)+ageBits(3)+negiBits(4)})+'<text x="268" y="40" class="s-q">？</text>')},
+  tokasu:function(){return svg(pot({fill:'broth',flame:'weak',steam:1,inner:daikonBits(3)+ageBits(2)+negiBits(3)})+
+    '<path d="M244 14L196 70" class="s-woodl"/><ellipse cx="190" cy="74" rx="26" ry="14" class="s-potl"/><ellipse cx="190" cy="73" rx="19" ry="8" class="s-miso"/>')},
+  hikeshi:function(){return svg(pot({fill:'miso',flame:'weak',steam:3,
+    inner:daikonBits(2)+ageBits(2)+negiBits(3)+'<circle cx="86" cy="70" r="4" class="s-bubble"/><circle cx="104" cy="82" r="3.4" class="s-bubble"/><circle cx="236" cy="70" r="4" class="s-bubble"/><circle cx="218" cy="82" r="3.4" class="s-bubble"/>'})+
+    '<text x="46" y="40" class="s-q">！</text>'+sticker(212,6,100,'ふっとう…'))},
+  ajimi:function(){return svg(
+    '<ellipse cx="160" cy="184" rx="124" ry="7" class="s-shadow"/>'+
+    '<path d="M62 84H258Q258 150 160 168Q62 150 62 84Z" class="s-bowl"/>'+
+    '<ellipse cx="160" cy="84" rx="98" ry="20" class="s-potl"/><ellipse cx="160" cy="84" rx="88" ry="16" class="s-miso"/>'+
+    '<ellipse cx="124" cy="82" rx="10" ry="5" class="s-daikon"/><rect x="156" y="77" width="18" height="7" rx="2" class="s-aburage"/><ellipse cx="196" cy="86" rx="6" ry="3.2" class="s-negi"/><ellipse cx="146" cy="90" rx="6" ry="3.2" class="s-negi"/>'+
+    '<path d="M268 20L214 70" class="s-woodl"/><ellipse cx="206" cy="74" rx="22" ry="11" class="s-potl"/>'+
+    '<path d="M104 26q-6-8 0-16M132 26q-6-8 0-16" class="s-steam" style="stroke-width:5"/>'+'<text x="64" y="150" class="s-q" style="font-size:36px">？</text>')}
+};
+
+/* ---------- icons for the 作戦シート ---------- */
+function flameIco(h){
+  return '<svg viewBox="0 0 40 40" aria-hidden="true"><path class="s-flame1 s-outline" d="M12 36C12 '+(36-h*.6)+' 18 '+(36-h*.7)+' 20 '+(36-h)+'C22 '+(36-h*.7)+' 28 '+(36-h*.6)+' 28 36Z"/><path class="s-flame2" d="M16 36C16 '+(36-h*.3)+' 19 '+(36-h*.4)+' 20 '+(36-h*.55)+'C21 '+(36-h*.4)+' 24 '+(36-h*.3)+' 24 36Z"/></svg>';
+}
+var ICO={
+  fish:'<svg viewBox="0 0 40 40" aria-hidden="true"><path class="s-fish" d="M30 20L37 13V27Z"/><path class="s-fish" d="M4 20Q12 10 22 12Q29 14 31 20Q29 26 22 28Q12 30 4 20Z"/><circle cx="9" cy="19" r="1.8" fill="#fff"/></svg>',
+  cut:'<svg viewBox="0 0 40 40" aria-hidden="true"><path class="s-daikon" d="M6 14L26 14A20 20 0 0 1 6 34Z"/><path class="s-aburage" d="M24 28h12v6H24z"/></svg>',
+  pot:'<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="14" width="6" height="4" rx="2" class="s-pot"/><rect x="31" y="14" width="6" height="4" rx="2" class="s-pot"/><path class="s-pot" d="M7 14V28Q7 33 12 33H28Q33 33 33 28V14Z"/><ellipse cx="20" cy="14" rx="13" ry="4.5" class="s-potl"/><ellipse cx="20" cy="14" rx="10" ry="3" class="s-broth"/><path class="s-steam" style="stroke-width:3" d="M14 8q-3-3 0-6M26 8q-3-3 0-6"/></svg>',
+  miso:'<svg viewBox="0 0 40 40" aria-hidden="true"><path class="s-bowl" d="M4 16H36Q36 33 20 36Q4 33 4 16Z"/><ellipse cx="20" cy="16" rx="16" ry="4" class="s-miso s-outline"/></svg>'
+};
+
+/* ---------- questions: 8 もんだい ----------
+   key: あとで写真を入れるときの名前（IMG.q1 … IMG.q10）。いまは仮のイラスト。
+   cap: 正解したあとに、写真（絵）の下に出る言葉 */
+var IMG={q1:'img/niboshi.jpg',q2:'img/daikon.jpg',q3:'img/aburanuki.jpg',q4:'img/aburakiri.jpg',q5:'img/dashi.jpg',q6:'img/ireru.jpg',q7:'img/misotoku.jpg',q8:'img/hikeshi.jpg'};
+var STEPS=[
+  {no:1,stage:'だしのじゅんび',key:'q1',illu:'niboshi',alt:'煮干しの頭とはらわたを取って、分けているところ',cap:'頭と はらわたを とる',
+   q:'煮干しの頭とはらわたを取るのは、なぜかな？',
+   choices:['にがみやくさみが出るのを、ふせぐため','かたくて食べられないから','色をきれいにするため'],answer:0,
+   hint:'頭とはらわたは、だしの味にえいきょうするところだよ。',
+   explain:'頭とはらわたを取ると、にがみやくさみが出にくくなって、すっきりしただしがとれるよ。取ったら、水を入れたなべに煮干しを入れておこう。'},
+  {no:2,stage:'切る（だいこん）',key:'q2',illu:'daikon',alt:'だいこんを、半分に切ったところ',cap:'いちょう切り（{厚|あつ}さ5mm）',
+   q:'みそしるのだいこんは、どう切るかな？',
+   choices:['まるごと、そのまま入れる','いちょう切りにする','長さ10cmのぼうに切る'],answer:1,
+   hint:'火が通りやすい大きさにするよ。',
+   explain:'だいこんは、いちょう切りにするよ。厚さは5mm。うすく切ると、火が通りやすいんだ。'},
+  {no:3,stage:'切る（油あげ）①',key:'q3',illu:'aburage',alt:'ざるに入れた油あげに、熱湯をかけているところ',cap:'熱湯をかけて {油抜|あぶらぬ}き',
+   q:'油あげの油ぬきは、どうするとよいかな？',
+   choices:['水でさっとあらう','フライパンでいためる','熱湯をかけて、油ぬきをする'],answer:2,
+   hint:'あつい水をかけて、油を落とすよ。',
+   explain:'熱湯をかけて、油ぬきをしてもよいよ。熱湯をあつかうときは、やけどに注意してね。'},
+  {no:4,stage:'切る（油あげ）②',key:'q4',illu:'aburage',alt:'油あげを、包丁で細長く切っているところ',cap:'{短冊|たんざく}切り',
+   q:'油ぬきをした油あげは、どう切るかな？',
+   choices:['みじん切りにする','いちょう切りにする','短冊切りにする'],answer:2,
+   hint:'細長い形に切るよ。',
+   explain:'油あげは、短冊切りにするよ。細長く切ると、だしがしみて、食べやすいんだ。'},
+  {no:5,stage:'だしをとる',key:'q5',illu:'dashi',alt:'煮干しの入ったなべが、にえているところ',cap:'強火 → 中火で 4〜5分',
+   q:'煮干しの入ったなべを火にかけたら、火かげんはどうする？',
+   choices:['強火にして、ふっとうしたら中火にする','ずっと弱火','ずっと強火'],answer:0,
+   hint:'ご飯をたいたときも、はじめは強火だったね。',
+   explain:'強火にして、ふっとうしたら中火で4〜5分あたためるよ。だしがとれたら、煮干しを取り出そう。取り出さずに、そのまま食べてもよいよ。'},
+  {no:6,stage:'実を入れる',key:'q6',illu:'daikon2',alt:'ねぎを、なべに入れているところ',cap:'かたい物から 入れる',
+   q:'実を入れるとき、いちばんはじめに入れるのは、どれかな？',
+   choices:['ねぎ','だいこん','油あげ'],answer:1,
+   hint:'かたい物、火が通りにくい物から入れるよ。',
+   explain:'かたい物、火の通りにくい物から入れるよ。だから、いちばんはじめは、だいこん。だいこんがすき通ってきたら、油あげ、ねぎを入れよう。味や色、香りを大切にする実（ねぎ）は、さいごに入れるよ。'},
+  {no:7,stage:'みそを入れる',key:'q7',illu:'tokasu',alt:'みそを、だし汁でといてから、なべに入れているところ',cap:'少しのだし汁で とかして 入れる',
+   q:'みそは、どうやってなべに入れるかな？',
+   choices:['そのまま、かたまりで入れる','水でといてから入れる','少しのだし汁でといてから入れる'],answer:2,
+   hint:'なべの中のしるを、ほんの少しだけ使うよ。',
+   explain:'少しのだし汁で、みそをといてから入れるよ。みそこしを使ってもいいね。みそは、一度にすべて入れずに、味見をしながら入れよう。ちょうどよい味に近づけていくんだ。'},
+  {no:8,stage:'火を消す',key:'q8',illu:'hikeshi',alt:'みそを入れたあと、ふっとうしそうになったなべ',cap:'ふっとうしそうで 火を消す',
+   q:'みそを入れて、もういちどふっとうしそうになったら、どうする？',
+   choices:['すぐに火を消す','ぐらぐら、にたてる','もう5分、にる'],answer:0,
+   hint:'みその香りを、にがさないようにしたいね。',
+   explain:'ふっとうしそうになったら、すぐに火を消すよ。熱しすぎると、味がこくなって、みその香りがなくなってしまうんだ。'}
+];
+var N=STEPS.length;
+var ROWS=[
+  {name:'だしのじゅんび',time:'',cue:'なべに水と、頭とはらわたを取った煮干しを入れておく。',idx:[0],ico:'fish'},
+  {name:'実を切る',time:'',cue:'だいこんは、いちょう切り（厚さ5mm）。油あげは、熱湯をかけて油ぬきをして、短冊切り。ねぎは、小口切り。熱湯は、やけどに注意。',idx:[1,2,3],ico:'cut'},
+  {name:'だしをとる',time:'4〜5分くらい',cue:'強火でふっとうさせて、中火に。だしがとれたら、煮干しを取り出す。',idx:[4],ico:'pot'},
+  {name:'実を入れる',time:'',cue:'かたい物から。だいこん → 油あげ → ねぎ（さいごに）。',idx:[5],ico:'pot'},
+  {name:'みそを入れて、火を消す',time:'',cue:'少しのだし汁でとかして、味見をしながら入れる。ふっとうしそうになったら、すぐに火を消す。',idx:[6,7],ico:'miso'}
+];
+
+/* ---------- state ---------- */
+var app=$('#app'),idx=0,finished=false,hist=[],st=null;
+var reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function newState(){return {wrong:0,solved:false,picked:{},msg:null}}
+
+/* ---------- views ---------- */
+function track(n){
+  var h='<ol class="track" aria-label="しんちょく">';
+  for(var k=1;k<=N;k++){
+    var cls=k<n?'done':(k===n?'now':'');
+    h+='<li class="'+cls+'"><span class="dot">'+(k<n?CHECK:k)+'</span>'+(k<N?'<span class="bar '+(k<n?'done':'')+'"></span>':'')+'</li>';
+  }
+  return h+'</ol>';
+}
+function header(n){
+  return '<header class="top">'+mascot('happy',60)+'<div><h1>みそしるを作ろう！</h1><p class="sub">5年 家庭科「ご飯とみそしる」</p></div><span class="pre">試作版</span></header>'+track(n);
+}
+var FOOT='<p class="foot">試作版です。写真は授業で見る動画の場面で、写真がない問題は仮の絵です。校内の授業だけで使い、外には公開しないでください。回答の記録は残しません。</p>';
+function fbHTML(){
+  if(!st.msg)return '';
+  var ok=st.msg.ok;
+  return '<div class="fb '+(ok?'ok':'no')+'" role="status">'+mascot(ok?'cheer':'oops',68)+'<div class="say"><strong>'+(ok?'せいかい！':'おしい！')+'</strong>'+rubyfy(st.msg.t)+'</div></div>';
+}
+function nextBtn(){
+  if(!st.solved)return '';
+  return '<button class="next" data-act="next" id="nextBtn">'+(idx===N-1?'作戦シートを見る':'つぎのもんだいへ')+ARROW+'</button>';
+}
+function choicesHTML(s){
+  var L=['ア','イ','ウ'],h='<div class="choices">';
+  s.choices.forEach(function(c,k){
+    var cls=st.picked[k]?(k===s.answer?' good':' bad'):'';
+    h+='<button class="choice'+cls+'" data-act="pick" data-k="'+k+'"'+(st.solved||st.picked[k]?' disabled':'')+'><span class="badge">'+L[k]+'</span><span class="ctext">'+rubyfy(c)+'</span><span class="mark">'+(cls===' good'?CHECK:cls===' bad'?CROSS:'')+'</span></button>';
+  });
+  return h+'</div>';
+}
+function picHTML(s){
+  var cap=st.solved?'<div class="cap'+(st.justSolved?' pop':'')+'">'+rubyfy(s.cap)+'</div>':'<div class="cap empty">'+(IMG[s.key]?'動画の場面':'')+'</div>';
+  if(IMG[s.key]){
+    return '<div class="pic"><figure class="polaroid"><img class="shot" src="'+IMG[s.key]+'" alt="'+s.alt+'" width="960" height="540"><figcaption>'+cap+'</figcaption></figure></div>';
+  }
+  return '<div class="pic"><figure class="polaroid"><div class="illbox" role="img" aria-label="'+s.alt+'">'+ILLU[s.illu]()+'</div><figcaption>'+cap+'</figcaption></figure><p class="ph">仮のイラスト：ここに写真を入れます</p></div>';
+}
+function stepView(){
+  var s=STEPS[idx];
+  return header(s.no)+'<main class="stage">'+picHTML(s)+'<section>'+
+    '<div class="qmeta"><span class="stagechip">'+rubyfy(s.stage)+'</span><span class="qno">もんだい '+s.no+' / '+N+'</span></div>'+
+    '<h2 class="q" id="qh" tabindex="-1">'+rubyfy(s.q)+'</h2>'+
+    choicesHTML(s)+fbHTML()+nextBtn()+'</section></main>'+FOOT;
+}
+function resultView(){
+  var flags=STEPS.map(function(s,k){return hist[k]&&hist[k].wrong===0});
+  var ok=flags.filter(Boolean).length,stars='';
+  flags.forEach(function(f){stars+='<span class="'+(f?'':'off')+'">'+STAR+'</span>'});
+  var rows=ROWS.map(function(r){
+    var good=r.idx.every(function(k){return flags[k]});
+    return '<div class="row"><span class="ri">'+ICO[r.ico]+'</span><div><b>'+rubyfy(r.name)+'</b>'+(r.time?'<span class="rt">'+rubyfy(r.time)+'</span>':'')+'<span class="cue">'+rubyfy(r.cue)+'</span></div>'+
+      '<span class="tag '+(good?'on':'off')+'">'+(good?'ばっちり':'実習でたしかめよう')+'</span></div>';
+  }).join('');
+  return header(N+1)+'<main class="stage"><section class="pic hero">'+mascot('cheer',120)+'<h2>ぜんぶ できたね！</h2><p>1回で正解できた問題</p><div class="stars" role="img" aria-label="'+N+'問中'+ok+'問">'+stars+'</div><p><b>'+ok+' / '+N+'</b></p><button class="again" data-act="again">もういちどやる</button></section>'+
+    '<section class="sheet"><h3>みそしるを作る 作戦シート</h3><p class="note">実習の日に、この順番で作っていこう。時間は、4人分を作るときのめやすだよ。</p>'+rows+'</section></main>'+FOOT;
+}
+
+/* ---------- actions ---------- */
+function render(opt){
+  opt=opt||{};
+  app.innerHTML=finished?resultView():stepView();
+  if(opt.focusHead){var h=$('#qh');if(h)h.focus({preventScroll:true})}
+  if(opt.scrollFb){var f=$('.fb');if(f)f.scrollIntoView({block:'nearest',behavior:reduced?'auto':'smooth'})}
+  if(st)st.justSolved=false;
+}
+function pick(k){
+  var s=STEPS[idx];
+  if(st.solved||st.picked[k])return;
+  st.picked[k]=true;
+  if(k===s.answer){st.solved=true;st.justSolved=true;st.msg={ok:true,t:s.explain};hist[idx]=st}
+  else{st.wrong++;st.msg={ok:false,t:s.hint}}
+  render({scrollFb:true});
+}
+function next(){
+  if(idx===N-1){finished=true;render();window.scrollTo(0,0);return}
+  idx++;st=newState();render({focusHead:true});window.scrollTo(0,0);
+}
+function restart(){idx=0;finished=false;hist=[];st=newState();render({focusHead:true});window.scrollTo(0,0)}
+app.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');
+  if(!b||b.disabled)return;
+  var a=b.dataset.act;
+  if(a==='pick')pick(+b.dataset.k);
+  else if(a==='next')next();
+  else if(a==='again')restart();
+});
+st=newState();render();
+</script>
